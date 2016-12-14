@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <strings.h>
+#include <string.h>
+#include <unistd.h>
 
 
 #include <infiniband/verbs.h>
@@ -8,9 +10,10 @@
 
 /* contains memory problem for ibv_close_device */
 
+struct ibv_device ** dev_list;
+
 struct ibv_context *  pick_device()
 {
-	struct ibv_device ** dev_list;
 	struct ibv_device * dev;
 	struct ibv_context * ctx ;
 	struct ibv_device_attr dev_attr;
@@ -37,6 +40,7 @@ struct ibv_context *  pick_device()
 			}	
 			int ports = dev_attr.phys_port_cnt;
 			for (port_num=1;port_num<=ports;port_num++) {
+				memset(&port_attr,0,sizeof(struct ibv_port_attr));
 				ret = ibv_query_port(ctx,port_num,&port_attr);
 				if (ret) {
 					printf("WARN,Skip dev: %s port: %d,Cann't query port info\n",dev_list[i]->name,port_num);
@@ -45,7 +49,6 @@ struct ibv_context *  pick_device()
 				else {
 					if (port_attr.state == IBV_PORT_ACTIVE) {
 						printf("OK: Return dev: %s port: %d\n",dev_list[i]->name,port_num);
-						ibv_free_device_list(dev_list);
 						return ctx;
 					}
 				}
@@ -54,7 +57,6 @@ struct ibv_context *  pick_device()
 		else 
 			printf("WARN,Skip dev :%s,Cann't open device\n",dev_list[i]->name);
 	}
-	ibv_free_device_list(dev_list);
 	return NULL;
 }
 
@@ -73,5 +75,7 @@ int main()
 		return 1;
 	}
 	ibv_dealloc_pd(pd);
+	ibv_close_device(ctx);
+	ibv_free_device_list(dev_list);
 	return 0;
 }
