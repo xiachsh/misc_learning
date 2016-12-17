@@ -46,7 +46,7 @@ int main()
 				ret = ibv_query_port(ctx[i],j,&port_attr);
 				if (ret) 
 					printf("\t query port ");
-				printf("\t Dev :%s Port:%d State:%s\n",dev_list[i]->name,j,ibv_port_state_str(port_attr.state));
+				printf("\t Dev :%s Port:%d State:%s LID:%d\n",dev_list[i]->name,j,ibv_port_state_str(port_attr.state),port_attr.lid);
 			}
 			ibv_close_device(ctx[i]);
 		}
