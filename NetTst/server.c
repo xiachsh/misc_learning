@@ -26,8 +26,10 @@ typedef struct _request {
 	req->cli_addr = addr;				 
 
 #define FREE_REQ(req)  					\
-	free(req->cli_addr);				\
-	free(req);						
+	Request * _req_ = (Request *) req;		\
+	free(_req_->cli_addr);				\
+	free(_req_);					\
+	_req_ = req = NULL;	
 
 TestConf runConf =  {
 	.port = 5001,
@@ -92,6 +94,7 @@ void* worker_fn(void * req)
 	fprintf(stdout,"Get %d bytes in thread id :%ld\n",totalRecv,pthread_self());
 	free(buffer);
 	close(_req->sockfd);
+	FREE_REQ(req);
 	return ret;
 }
 
