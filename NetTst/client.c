@@ -4,9 +4,8 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <pthread.h>
-
 #include <unistd.h>
-
+#include <sys/time.h>
 #define BLOCKSIZE 512*1024
 
 
@@ -18,6 +17,14 @@ typedef struct testConf {
 
 } TestConf;
 
+typedef struct testOutput {
+	unsigned long int bandWidth;
+	time_t * eclapsedTime;
+	time_t  maxCostTime;
+	time_t  minCostTime;
+	int sec;
+} TestOutput ;
+
 TestConf runConf =  {
 	.threadNum = 16,
 	.port = 5001,
@@ -25,13 +32,22 @@ TestConf runConf =  {
 	.server = "127.0.0.1",
 };
 
+TestOutput result = { 
+	.bandWidth = 0,
+	.eclapsedTime = NULL,
+	.maxCostTime = 0,
+	.minCostTime = 0,
+	.sec = 0,
+};
+
 void usage(int argc,char **argv)
 {
 	fprintf(stderr,"%s usage:\n",argv[0]);
+	fprintf(stderr,"	: -h print this help\n");
 	fprintf(stderr,"	: -t threadNum default CPU of current hosts\n");
-	fprintf(stderr,"	: -b blockSize default 1M");
-	fprintf(stderr,"	: -s serverName default 127.0.0.1");
-	fprintf(stderr,"	: -p portNum default 5001");
+	fprintf(stderr,"	: -b blockSize default 1M\n");
+	fprintf(stderr,"	: -s serverName default 127.0.0.1\n");
+	fprintf(stderr,"	: -p portNum default 5001\n");
 	exit (1);
 }
 
@@ -40,7 +56,7 @@ void parse_args(int argc,char **argv)
 {
 	int c;
 
-	while (( c=getopt(argc,argv,"t:b:s:p:")) != -1 ) {
+	while (( c=getopt(argc,argv,"t:b:s:p:h")) != -1 ) {
 		char * v;
 		switch(c) {
 		case 't':
@@ -70,7 +86,9 @@ void parse_args(int argc,char **argv)
                         }
                         runConf.port= atoi(v);
                         break;
-
+		case 'h':
+			usage(argc,argv);
+			break;
 		default:
 			fprintf(stderr,"unknown option %c \n",c);
 			break;
@@ -136,15 +154,24 @@ void print_args()
 
 }
 
+void print_result(void)
+{
+	fprintf(stderr,"============================================\n");	
+	fprintf(stderr,"================Test Result=================\n");
+	fprintf(stderr,"Avg BandWidth:%d b/s\n",result.bandWidth);
+}
+
 int main(int argc, char *argv[]) {
 
    char *buffer;
    pthread_t * t_arr;
    int t_index;
+   time_t t1,t2;
    parse_args(argc,argv);
    print_args();
 
    t_arr = malloc(sizeof(pthread_t) * runConf.threadNum);
+   t1 = time(NULL);
    for (t_index=0;t_index<runConf.threadNum;t_index++){
 	pthread_create(&t_arr[t_index],NULL,worker_fn,NULL);
    }
@@ -154,7 +181,11 @@ int main(int argc, char *argv[]) {
 	pthread_join(t_arr[t_index],&ret);
 	free(ret);
    }
-   
+   t2 = time(NULL);
+   if (t2 - t1) 
+   result.bandWidth = ( BLOCKSIZE*8*runConf.threadNum )/(t2-t1);
+
+   print_result();
    free(t_arr);
    return 0;
 }
