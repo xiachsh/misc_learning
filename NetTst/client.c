@@ -181,11 +181,15 @@ int main(int argc, char *argv[]) {
 	pthread_join(t_arr[t_index],&ret);
 	free(ret);
    }
+<<<<<<< HEAD
    t2 = time(NULL);
    if (t2 - t1) 
    result.bandWidth = ( BLOCKSIZE*8*runConf.threadNum )/(t2-t1);
 
    print_result();
+=======
+   
+>>>>>>> ca4abf3af97c6ef4d15f04c8cbd18c809cb035cd
    free(t_arr);
    return 0;
 }
