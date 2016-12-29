@@ -110,6 +110,7 @@ void* worker_fn()
       return retStat;
    }
    buffer = malloc(sizeof (char) * runConf.blockSize);
+   bzero(buffer,sizeof (char) * runConf.blockSize);
    sent = write(sockfd, buffer, runConf.blockSize);
    if (sent != runConf.blockSize ) {
      	 	perror("ERROR writing to socket");
@@ -149,9 +150,10 @@ int main(int argc, char *argv[]) {
    }
    
    for (t_index=0;t_index<runConf.threadNum;t_index++){
-	pthread_join(t_arr[t_index],NULL);
+	void *ret = NULL;
+	pthread_join(t_arr[t_index],&ret);
+	free(ret);
    }
-   
    
    free(t_arr);
    return 0;
