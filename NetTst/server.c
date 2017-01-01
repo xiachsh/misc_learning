@@ -27,7 +27,6 @@ typedef struct _request {
 
 #define FREE_REQ(req)  					\
 	Request * _req_ = (Request *) req;		\
-	free(_req_->cli_addr);				\
 	free(_req_);					\
 	_req_ = req = NULL;	
 
