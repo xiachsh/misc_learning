@@ -1,0 +1,19 @@
+<project name="xiachsh">
+	<path id="library">
+		 <pathelement path="/data/learning/java/junit-4.7.jar" />
+	</path>
+	<target name="clean">
+		<delete dir="build/classes" />
+	</target>
+
+	<target name="compile">
+		<mkdir dir="build/classes" />
+		<javac srcdir="src" destdir="build/classes" classpathref="library" debug="on" />
+	</target>
+
+	<target name="jar" depends="compile" >
+		<mkdir dir="build/jar" />
+		<jar destfile="build/jar/test.jar" basedir="build/classes"  />
+	</target>
+
+</project>

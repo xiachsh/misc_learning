@@ -1,0 +1,89 @@
+Hi Chengshun,
+
+Please work on the following two homework tasks on Java:
+
+.
+
+Two tasks:
+——————————————————————————
+Please complete the following code so it compiles and works in accordance to contract defined in javadoc comments.
+Please refrain from using any API from java.util.concurrent package.
+Limit the amount of additional consumed memory to O(1).
+Write tests for your implementation. You could use a meta-language for scripting the test.
+/**
+  * Provides waiting thread-safe access to a java.util.Queue.
+  */
+public class BlockingQueue<T> {
+     /**
+      * @param queue Warning: queue may or may not be empty at the moment of calling this constructor.
+      * Warning: queue may or may not be a thread-safe implementation.
+      * Assumption: after been passed into this constructor, queue object is not used by any code outside this class.
+      */
+     public BlockingQueue(java.util.Queue queue) {…}
+     /**
+      * Inserts the specified element into the underlying queue, waiting if necessary for the underlying queue to be ready
+      * to accept new elements.
+      */
+     public void push(T element) {…}
+     /**
+      * Retrieves and removes the head of the underlying queue, waiting if necessary until it is capable of providing an element.
+      */
+     public T pull() {…}
+}
+——————————————————————————
+1. Implement a class that makes continuous iterator from multiple iterators.
+    It is similar to making multiple dimension array look as one dimension array.
+    So the class takes Iterator<Iterator<E>> and works as Iterator<E> itself.
+    Create tests necessary to test an implementation of IteratorFlattener
+
+2. Suggest a set of tests (data and methods) to test an implementation of IteratorFlattener.
+
+3. Answer the question: why do you think that suggested set of tests is enough to verify
+    that an IteratorFlattener is implemented correctly?
+
+4. Suggest a way how to compare two sets of tests for the same method.
+
+
+
+public class IteratorFlattener<E> implements Iterator<E> {
+     public IteratorFlattener(Iterator<Iterator<E>> root) {
+        // implement code here ...
+     }
+
+     // implement code here ...
+}
+
+
+public interface Iterator<E> {
+
+     /**
+      * @return true if the iterator has more elements.
+      */
+     boolean hasNext();
+
+     /**
+      * @return the next element in the iteration.
+      * @exception NoSuchElementException iteration has no more elements.
+      */
+     E next();
+
+     /**
+      * Removes from the underlying collection the last element returned
+      * by the iterator (optional operation).  This method can be called
+      * only once per call to next().
+      *
+      * @exception IllegalStateException if the next() method has not
+      * yet been called, or the remove() method has already been called
+      * after the last call to the next() method.
+      */
+     void remove();
+}
+——————————————————————————
+
+Thanks,
+
+Jibing
+
+
+
+

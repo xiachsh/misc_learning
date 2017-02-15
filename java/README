@@ -1,0 +1,9 @@
+Tasks one:
+
+	1) Since BlockingQueue is the an interface from java.util.concurrent,we will name the class to another rather
+	than BlockingQueue
+	2) run ant jar to compile 
+	3) run java -cp build/jar/test.jar myPackage.MyBlockingQueuePull and myPackage.MyBlockingQueuePush to test 
+Tasks two:
+	 
+
