@@ -1,4 +1,3 @@
-Hi Chengshun,
 
 Please work on the following two homework tasks on Java:
 
@@ -80,9 +79,7 @@ public interface Iterator<E> {
 }
 ——————————————————————————
 
-Thanks,
 
-Jibing
 
 
 
